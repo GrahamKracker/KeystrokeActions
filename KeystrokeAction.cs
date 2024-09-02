@@ -9,14 +9,16 @@ namespace KeystrokeActions;
 [HarmonyPatch]
 public abstract class KeystrokeAction : NamedModContent
 {
-    private static float TotalWeight { get; set; }
+    private static int TotalWeight { get; set; }
 
-    private static readonly Dictionary<Tuple<float, float>, KeystrokeAction> Weights = new();
+    public static System.Random Random { get; } = new();
+
+    private static readonly Dictionary<Tuple<int, int>, KeystrokeAction> Weights = new();
 
     /// <inheritdoc />
     public override void Register()
     {
-        Weights.Add(new Tuple<float, float>(TotalWeight, TotalWeight + Weight), this);
+        Weights.Add(new Tuple<int, int>(TotalWeight, TotalWeight + Weight), this);
         TotalWeight += Weight;
     }
 
@@ -24,15 +26,13 @@ public abstract class KeystrokeAction : NamedModContent
 
     protected abstract void OnActivate(InGame inGame);
 
-    protected abstract float Weight { get; }
+    protected abstract int Weight { get; }
 
     public static void ActivateKeystrokeAction()
     {
-
-        var num = Random.RandomRange(0, TotalWeight);
+        var num = Random.Next(0, TotalWeight);
         KeystrokeAction action = Weights.First(x=> num > x.Key.Item1 && num < x.Key.Item2).Value;
         action.OnActivate(InGame.instance);
         MelonLogger.Msg("activating keystroke: " + action.DisplayName);
-        //show text effect TODO
     }
 }

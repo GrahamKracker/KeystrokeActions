@@ -60,5 +60,5 @@ public class BloonsGainALayer : KeystrokeAction
     }
 
     /// <inheritdoc />
-    protected override float Weight => 25;
+    protected override int Weight => 25;
 }

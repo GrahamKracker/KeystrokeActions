@@ -13,7 +13,7 @@ public class LessMoneyForever : KeystrokeAction
     }
 
     /// <inheritdoc />
-    protected override float Weight => 25;
+    protected override int Weight => 25;
 
     [HarmonyPatch(typeof(Simulation), nameof(Simulation.AddCash))]
     [HarmonyPrefix]

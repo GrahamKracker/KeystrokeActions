@@ -12,11 +12,10 @@ public class TowerGoesDownATier : KeystrokeAction
     /// <inheritdoc />
     protected override void OnActivate(InGame inGame)
     {
-        var random = new Random();
         var allTowers = inGame.GetUnityToSimulation().GetAllTowers().ToList();
         if (allTowers.Count == 0)
             return;
-        var randomTower = allTowers[random.Next(0, allTowers.Count)];
+        var randomTower = allTowers[Random.Next(0, allTowers.Count)];
         if(randomTower is { tower.IsDestroyed: true, destroyed:true })
             OnActivate(inGame);
 
@@ -25,7 +24,7 @@ public class TowerGoesDownATier : KeystrokeAction
         var tiers = randomTowerModel.tiers;
         if (tiers.Any(tier => tier > 0))
         {
-            var randomPath = random.Next(0, tiers.Length);
+            var randomPath = Random.Next(0, tiers.Length);
             if (tiers[randomPath] == 0)
                 OnActivate(inGame);
             tiers[randomPath]--;
@@ -37,7 +36,15 @@ public class TowerGoesDownATier : KeystrokeAction
                     return false;
                 }
 
-                return !a.Where((t, i) => t != b[i]).Any();
+                for (var i = 0; i < a.Length; i++)
+                {
+                    if (a[i] != b[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
 
             var newModel = inGame.GetGameModel().towers.FirstOrDefault(towerModel =>
@@ -46,7 +53,6 @@ public class TowerGoesDownATier : KeystrokeAction
 
             if (newModel == null)
             {
-                MelonLogger.Error("New model is null");
                 return;
             }
 
@@ -59,14 +65,8 @@ public class TowerGoesDownATier : KeystrokeAction
             newtower.damageDealt = randomTower.tower.damageDealt;
             newtower.worth = randomTower.tower.worth;
             newtower.shouldShowCashIconInstead = randomTower.tower.shouldShowCashIconInstead;
-
-            if (TowerSelectionMenu.instance.GetSelectedTower()?.tower.Id == randomTower.tower.Id)
-                TaskScheduler.ScheduleTask(() =>
-                {
-                    TowerSelectionMenu.instance.SelectTower(newtower.GetTowerToSim());
-                    newtower.Selected();
-                    newtower.Hilight();
-                });
+            newtower.owner = randomTower.tower.owner;
+            newtower.cashEarned = randomTower.tower.cashEarned;
 
             inGame.GetTowerManager().DestroyTower(randomTower.tower, inGame.GetUnityToSimulation().MyPlayerNumber);
 
@@ -85,7 +85,7 @@ public class TowerGoesDownATier : KeystrokeAction
     }
 
     /// <inheritdoc />
-    protected override float Weight => 400000;
+    protected override int Weight => 400;
 
     
 }

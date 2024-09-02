@@ -11,5 +11,5 @@ public class StartNextRound : KeystrokeAction
     }
 
     /// <inheritdoc />
-    protected override float Weight => 100;
+    protected override int Weight => 100;
 }

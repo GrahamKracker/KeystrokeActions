@@ -7,10 +7,16 @@ public class BloonsSpawnSooner : KeystrokeAction
     /// <inheritdoc />
     protected override void OnActivate(InGame inGame)
     {
+        if(inGame.GetGameModel().roundSet?.rounds == null)
+            return;
         foreach (var roundModel in inGame.GetGameModel().roundSet.rounds)
         {
+            if (roundModel?.groups == null)
+                continue;
             foreach (var bloonGroupModel in roundModel.groups)
             {
+                if (bloonGroupModel == null)
+                    continue;
                 bloonGroupModel.start *= .9f;
             }
             roundModel.emissions_ = null;
@@ -19,7 +25,7 @@ public class BloonsSpawnSooner : KeystrokeAction
     }
 
     /// <inheritdoc />
-    protected override float Weight => 400;
+    protected override int Weight => 400;
 
     
 }

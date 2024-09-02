@@ -14,7 +14,7 @@ public class NoMoneyEndOfRound : KeystrokeAction
     }
 
     /// <inheritdoc />
-    protected override float Weight => 400;
+    protected override int Weight => 400;
 
     [HarmonyPatch(typeof(BonusCashPerRound), nameof(BonusCashPerRound.OnRoundEnd))]
     [HarmonyPrefix]

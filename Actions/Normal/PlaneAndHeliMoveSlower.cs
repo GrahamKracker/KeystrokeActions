@@ -38,5 +38,5 @@ public class PlaneAndHeliMoveSlower : KeystrokeAction
     }
 
     /// <inheritdoc />
-    protected override float Weight => 400;
+    protected override int Weight => 400;
 }
